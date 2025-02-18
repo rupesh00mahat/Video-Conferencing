@@ -27,9 +27,16 @@ io.on('connection', (socket) =>{
 
      socket.on('call-user', (data)=>{
       const {emailId, offer} = data;
+      console.log('emailId, offer', emailId, offer);
       const fromEmail = socketToEmailMapping.get(socket.id);
       const socketId = emailToSocketMapping.get(emailId);
-      socket.to(socketId).emit('incoming-call', {from: fromEmail, offer})
+      io.to(socketId).emit('incoming-call', {from: fromEmail, offer})
+     })
+     socket.on('call-accepted', (data)=>{
+      const {ans, emailId} = data;
+      const fromEmail = socketToEmailMapping.get(socket.id);
+      const socketId = emailToSocketMapping.get(emailId);
+      io.to(socketId).emit('call-accepted', {from: fromEmail, ans});
      })
 });
 
